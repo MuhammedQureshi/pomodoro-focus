@@ -80,12 +80,28 @@ export default function Home() {
     }
   }, []);
 
+  // Timer Controls
+  const toggleTimer = useCallback(() => {
+    setStatus(status => status === 'running' ? 'paused' : 'running');
+  }, []);
+
+  const resetTimer = useCallback(() => {
+    setStatus('idle');
+    setTimeLeft(settings[mode] * 60);
+  }, [mode, settings]);
+
+  const switchMode = useCallback((newMode: TimerMode) => {
+    setMode(newMode);
+    setStatus('idle');
+    setTimeLeft(settings[newMode] * 60);
+  }, [settings]);
+
   // Update the Play Sound function
-  const playNotification = () => {
+  const playNotification = useCallback(() => {
     if (settings.soundEnabled) {
       SoundManager.playNotification(settings.soundVolume);
     }
-  };
+  }, [settings]);
 
   // Timer Logic
   useEffect(() => {
@@ -138,29 +154,13 @@ export default function Home() {
         cancelAnimationFrame(animationFrameId);
       }
     };
-  }, [status, mode, settings, startTime, lastUpdate]);
+  }, [status, mode, settings, startTime, lastUpdate, playNotification, switchMode]);
 
   // Format time as mm:ss
   const formatTime = (seconds: number): string => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-  };
-
-  // Timer Controls
-  const toggleTimer = () => {
-    setStatus(status === 'running' ? 'paused' : 'running');
-  };
-
-  const resetTimer = () => {
-    setStatus('idle');
-    setTimeLeft(settings[mode] * 60);
-  };
-
-  const switchMode = (newMode: TimerMode) => {
-    setMode(newMode);
-    setStatus('idle');
-    setTimeLeft(settings[newMode] * 60);
   };
 
   // Keyboard Shortcuts

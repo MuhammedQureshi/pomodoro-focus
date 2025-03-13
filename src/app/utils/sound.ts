@@ -4,7 +4,11 @@ class SoundManager {
 
   private static getContext() {
     if (!this.context) {
-      this.context = new (window.AudioContext || (window as any).webkitAudioContext)();
+      interface WebKitWindow extends Window {
+        webkitAudioContext: typeof AudioContext;
+      }
+      
+      this.context = new (window.AudioContext || (window as unknown as WebKitWindow).webkitAudioContext)();
       this.gainNode = this.context.createGain();
       this.gainNode.connect(this.context.destination);
     }

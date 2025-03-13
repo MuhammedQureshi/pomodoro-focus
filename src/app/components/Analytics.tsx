@@ -37,9 +37,7 @@ export default function Analytics() {
   const [selectedPeriod, setSelectedPeriod] = useState<'today' | 'week' | 'month'>('today');
   const todayStats = mockWeeklyData[mockWeeklyData.length - 1];
   
-  const maxMinutes = Math.max(...mockWeeklyData.map(d => d.focusMinutes));
   const totalFocusTime = mockWeeklyData.reduce((acc, curr) => acc + curr.focusMinutes, 0);
-  const averageFocusTime = Math.round(totalFocusTime / mockWeeklyData.length);
   const totalSessions = mockWeeklyData.reduce((acc, curr) => acc + curr.sessions, 0);
   const totalTasks = mockWeeklyData.reduce((acc, curr) => acc + curr.completedTasks, 0);
   const productivityScore = Math.round((totalFocusTime / (mockWeeklyData.length * 240)) * 100);
